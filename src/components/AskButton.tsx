@@ -4,7 +4,7 @@ const AskButton = (props:any) => {
     const { text } = props
     return (
         text &&
-        <Button {...props} >{text || ''}</Button>
+        <Button variant='contained' {...props} >{text || ''}</Button>
     )
 }
 
