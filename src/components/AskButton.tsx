@@ -1,10 +1,10 @@
 
 import { Button } from '@mui/material';
 const AskButton = (props:any) => {
-    const { text } = props
+    const { text, } = props
     return (
         text &&
-        <Button variant='contained' {...props} >{text || ''}</Button>
+        <Button variant='contained'{...props} >{text || ''}</Button>
     )
 }
 
