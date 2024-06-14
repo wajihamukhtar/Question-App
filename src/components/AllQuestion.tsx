@@ -1,44 +1,29 @@
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import { getDatabase, ref, get } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-import app from "../config/firebaseConfig";
+import { fetchQuestions } from "../config/firebaseMethods"; // Adjust the import path as necessary
 import AskButton from "./AskButton";
 
 interface Question {
   id: string;
   question: string;
 }
-const AllQuestion: any = () => {
+
+const AllQuestion: React.FC = () => {
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const navigate = useNavigate();
 
-  const fetchQuestions = async () => {
-    const db = getDatabase(app);
-    const questionsRef = ref(db, "question");
-    try {
-      const snapshot = await get(questionsRef);
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-
-        const questionsArray: Question[] = Object.entries(data).map(
-          ([id, value]) => {
-            const questionData = value as Omit<Question, "id">;
-            return {
-              id: id as string,
-              ...questionData,
-            };
-          }
-        );
-        setAllQuestions(questionsArray);
-      }
-    } catch (error) {
-      console.error("Error fetching questions:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchQuestions();
+    const loadQuestions = async () => {
+      try {
+        const questions = await fetchQuestions();
+        setAllQuestions(questions);
+      } catch (error) {
+        console.error("Error loading questions:", error);
+      }
+    };
+
+    loadQuestions();
   }, []);
 
   const handleAskQuestion = () => {
@@ -52,37 +37,54 @@ const AllQuestion: any = () => {
   return (
     <Box
       sx={{
-        borderRadius: "5px",
-        boxShadow: "1px 3px 2px 2px gray",
-        width: "75%",
+        borderRadius: "10px",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+        width: { xs: "90%", md: "75%" },
         margin: "auto",
         marginTop: "50px",
-        padding: "20px",
+        padding: "30px",
+        backgroundColor: "#fff",
       }}
     >
-      <Box>
+      <Box mb={3}>
         <Typography
-          sx={{ fontSize: "30px", paddingBottom: "20px" }}
-          component={"h1"}
+          sx={{ fontSize: "2rem", fontWeight: "bold", pb: 2, borderBottom: "2px solid #f0f0f0" }}
+          component="h1"
         >
           All Questions
         </Typography>
-        <Typography component={"ol"}>
+        <Box component="ol" sx={{paddingTop:'1.5rem', paddingLeft: "1rem" }}>
           {allQuestions.map((item) => (
             <Typography
               onClick={() => handleQuestionClick(item.id)}
-              sx={{ fontSize: "20px", cursor: "pointer" }}
+              sx={{
+                fontSize: "20px",
+                cursor: "pointer",
+                color: "#007acc",
+                mb: 1,
+                '&:hover': {
+                  color:'#005c99',
+                },
+              }}
               key={item.id}
-              component={"li"}
+              component="li"
             >
               {item.question}
             </Typography>
           ))}
-        </Typography>
+        </Box>
       </Box>
       <AskButton
         text="Ask Question"
-        sx={{ fontSize: "13px", marginTop: "30px" }}
+        sx={{
+          fontSize: "0.875rem",
+          padding: "10px 20px",
+          backgroundColor: "#007acc",
+          color: "#fff",
+          '&:hover': {
+            backgroundColor: "#005c99",
+          },
+        }}
         onClick={handleAskQuestion}
       />
     </Box>
@@ -90,3 +92,4 @@ const AllQuestion: any = () => {
 };
 
 export default AllQuestion;
+

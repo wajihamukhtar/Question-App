@@ -60,14 +60,15 @@ const Question: any = () => {
       {find_data ? (
         <>
           <Typography
-            sx={{ fontSize: "30px", paddingBottom: "20px" }}
+            sx={{ fontSize: "2rem", fontWeight: "bold", pb: 2, borderBottom: "2px solid #f0f0f0" }}
             component={"h1"}
           >
             Question Details
           </Typography>
           <Typography
-            // key={QuestionData.id}
-            sx={{ fontSize: "20px" }}
+            sx={{ fontSize: "20px",paddingTop:'1.5rem',paddingBottom:'1.5rem',
+              color:'#007acc'
+             }}
             component={"p"}
           >
             {find_data.question}
