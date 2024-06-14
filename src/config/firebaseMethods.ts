@@ -1,7 +1,5 @@
 import { getDatabase, ref, get, push, set } from "firebase/database";
-import app from "../config/firebaseConfig"; // Adjust the import path as necessary
-
-// Define the Question interface
+import app from "./firebaseConfig";
 interface Question {
   id: string;
   question: string;
